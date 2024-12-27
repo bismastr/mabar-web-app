@@ -3,69 +3,8 @@ import { FilterBar } from "@/components/filter-bar";
 import { CreateMabarDrawer } from "@/components/createmabar-drawer";
 import { GamingSession } from "@/types/GamingSession";
 
-interface Session {
-    session_id: number;
-    is_finish: boolean;
-    session_end?: string;
-    session_start?: string;
-    created_by: User;
-    members?: User[]; // Optional array of User objects
-    game_info: GameInfo;
-}
-
-interface GameInfo {
-    id: number;
-    name: string;
-    icon_url: string;
-}
-
-interface User {
-    user_id: number;
-    username: string;
-    avatar_url: string;
-    discord_uid: number;
-}
-
 interface MabarListProps {
     mabar: GamingSession[];
-}
-
-const sessionExample: Session = {
-    "session_id": 79,
-    "is_finish": false,
-    "session_end": "",
-    "session_start": "",
-    "created_by": {
-        "user_id": 60,
-        "username": "tiradord_elite",
-        "avatar_url": "https://media.discordapp.net/avatars/577310684988178432/b002411f74fa84e1b6fff0e9972523cc.jpg",
-        "discord_uid": 577310684988178432
-    },
-    "members": [
-        {
-            "user_id": 60,
-            "username": "tiradord_elite",
-            "avatar_url": "https://media.discordapp.net/avatars/577310684988178432/b002411f74fa84e1b6fff0e9972523cc.jpg",
-            "discord_uid": 577310684988178432
-        },
-        {
-            "user_id": 1,
-            "username": "bismastr",
-            "avatar_url": "https://media.discordapp.net/avatars/364635434304798730/f217bddabc4ca4e60edf705cf1454c08.jpg",
-            "discord_uid": 364635434304798730
-        },
-        {
-            "user_id": 153,
-            "username": "icebear_21",
-            "avatar_url": "https://media.discordapp.net/avatars/390090072416059392/79e498e08e4a8c264d11d2321846f6b6.jpg",
-            "discord_uid": 390090072416059392
-        }
-    ],
-    "game_info": {
-        "id": 2,
-        "name": "Deadlock",
-        "icon_url": "https://cdn.cloudflare.steamstatic.com/steam/apps/1422450/logo_2x.png?t=1724782459"
-    }
 }
 
 export const MabarList: React.FC<MabarListProps> = ({ mabar }) => {
@@ -112,7 +51,7 @@ export const MabarList: React.FC<MabarListProps> = ({ mabar }) => {
                                 <div>{session.game_info.name}</div>
                             </TableCell>
                             {/* Room Name */}
-                            <TableCell>[ID] Fun counter strike 2, all rank bebas bisa join</TableCell>
+                            <TableCell>{session.name}</TableCell>
                             {/* Members Avatar Icon */}
                             <TableCell>
                                 <div className="flex-grow h-14 flex">

@@ -6,6 +6,7 @@ export interface GamingSession {
     created_by: User;
     members?: User[];
     game_info: GameInfo;
+    name: string;
 }
 
 export interface User {
