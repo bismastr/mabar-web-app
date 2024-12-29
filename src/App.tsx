@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { getAllGaming } from './reducers/gamingSessionsReducer';
 import { GetAllGamingSessionsParams } from './types/GamingSession';
 import { useAppDispatch, useAppSelector } from './hooks';
+import { getProfile } from './reducers/userReducer';
 
 
 
@@ -17,6 +18,7 @@ function App() {
   useEffect(() => {
     const params: GetAllGamingSessionsParams = { rows: 16, page: 1 };
     dispatch(getAllGaming(params));
+    dispatch(getProfile())
   }, []);
 
   return (
