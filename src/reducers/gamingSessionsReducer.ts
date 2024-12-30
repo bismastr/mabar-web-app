@@ -36,5 +36,4 @@ export const getAllGaming = (param: GetAllGamingSessionsParams) => async (dispat
     } catch (error) {
         console.error('Failed to fetch gaming sessions:', error);
     }
-
 };

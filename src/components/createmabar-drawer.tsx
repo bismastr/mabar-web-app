@@ -24,7 +24,10 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useAppSelector } from "@/hooks"
+import { useAppDispatch, useAppSelector } from "@/hooks"
+import gamingSessionService from "@/services/gamingSessionService"
+import { CreateGamingSessionParams, GetAllGamingSessionsParams } from "@/types/GamingSession"
+import { getAllGaming } from "@/reducers/gamingSessionsReducer"
 import userService from "@/services/userService"
 
 export function CreateMabarDrawer() {
@@ -65,7 +68,7 @@ export function CreateMabarDrawer() {
                             Create mabar session and play with players around the world
                         </DialogDescription>
                     </DialogHeader>
-                    <ProfileForm />
+                    <ProfileForm setOpen={setOpen} />
                 </DialogContent>
             </Dialog>
         )
@@ -83,7 +86,7 @@ export function CreateMabarDrawer() {
                         Make changes to your profile here. Click save when you're done.
                     </DrawerDescription>
                 </DrawerHeader>
-                <ProfileForm className="px-4" />
+                <ProfileForm className="px-4" setOpen={setOpen} />
                 <DrawerFooter className="pt-2">
                     <DrawerClose asChild>
                         <Button variant="outline">Cancel</Button>
@@ -94,30 +97,59 @@ export function CreateMabarDrawer() {
     )
 }
 
-function ProfileForm({ className }: React.ComponentProps<"form">) {
+function ProfileForm({ className, setOpen }: React.ComponentProps<"form"> & { setOpen: React.Dispatch<React.SetStateAction<boolean>>; }) {
+    const [sessionName, setSessionName] = React.useState<string>('Mabar Session');
+    const [gameId, setGameId] = React.useState<number | 0>(0);
+    const dispatch = useAppDispatch();
+    const userState = useAppSelector(state => state.user)
+
+    const submitCreateMabar = async (event: React.FormEvent) => {
+        event.preventDefault();
+        console.log(userState.user?.id)
+        const params: CreateGamingSessionParams = {
+            session_end: '2024-11-09T15:00:00Z',
+            session_start: '2024-11-09T13:00:00Z',
+            created_by: userState.user?.id,
+            game_id: gameId,
+            name: sessionName,
+            is_finish: false,
+        };
+
+
+
+        try {
+            await gamingSessionService.createGamingSession(params)
+            const mabarListParams: GetAllGamingSessionsParams = { rows: 16, page: 1 };
+            dispatch(getAllGaming(mabarListParams));
+            setOpen(false)
+        } catch {
+            console.error('Failed to create new mabar')
+        }
+    }
+
     return (
-        <form className={cn("grid items-start gap-4", className)}>
+        <form className={cn("grid items-start gap-4", className)} onSubmit={submitCreateMabar}>
             <div className="grid gap-2">
                 <Label htmlFor="game">Game</Label>
-                <Select>
+                <Select onValueChange={(value) => setGameId(Number(value))}>
                     <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select a game" />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
                             <SelectLabel>Games</SelectLabel>
-                            <SelectItem value="deadlock">Deadlock</SelectItem>
-                            <SelectItem value="counter-strike-2">Counter-Strike 2</SelectItem>
-                            <SelectItem value="rainbow-six">Rainbow Six</SelectItem>
-                            <SelectItem value="eafc-25">EAFC-25</SelectItem>
-                            <SelectItem value="minecraft">Minecraft</SelectItem>
+                            <SelectItem value="1">Counter-Strike 2</SelectItem>
+                            <SelectItem value="2">Deadlock</SelectItem>
+                            <SelectItem value="3">Valorant</SelectItem>
                         </SelectGroup>
                     </SelectContent>
                 </Select>
             </div>
             <div className="grid gap-2">
                 <Label htmlFor="room-name">Session Name (optional)</Label>
-                <Input id="room-name" defaultValue="Mabar Session" />
+                <Input id="room-name"
+                    value={sessionName}
+                    onChange={(e) => setSessionName(e.target.value)} />
             </div>
             <Button type="submit">Create Mabar</Button>
         </form>

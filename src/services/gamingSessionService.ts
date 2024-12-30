@@ -1,4 +1,4 @@
-import { GamingSession, GetAllGamingSessionsParams } from "@/types/GamingSession";
+import { CreateGamingSessionParams, GamingSession, GetAllGamingSessionsParams } from "@/types/GamingSession";
 import { axiosClient } from "./client"
 
 const fetchGetAllGamingSession = async (req: GetAllGamingSessionsParams) => {
@@ -12,4 +12,14 @@ const fetchGetAllGamingSession = async (req: GetAllGamingSessionsParams) => {
     return res.data
 }
 
-export default { fetchGetAllGamingSession }
+const createGamingSession = async (req: CreateGamingSessionParams) => {
+    const res = await axiosClient.post<GamingSession>("/gaming-session/create", req, {
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+
+    return res.data
+}
+
+export default { fetchGetAllGamingSession, createGamingSession }

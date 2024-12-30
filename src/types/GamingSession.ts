@@ -10,7 +10,7 @@ export interface GamingSession {
 }
 
 export interface User {
-    user_id: number;
+    id: number;
     username: string;
     avatar_url: string;
     discord_uid: number;
@@ -25,4 +25,13 @@ export interface GameInfo {
 export interface GetAllGamingSessionsParams {
     rows: number;
     page: number;
+}
+
+export interface CreateGamingSessionParams {
+    created_by: number | undefined;
+    session_end: string;
+    session_start: string;
+    is_finish: boolean;
+    game_id: number;
+    name: string;
 }
